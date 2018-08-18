@@ -1,6 +1,8 @@
 package com.alpayyildiray.pacman.actors;
 
 import com.alpayyildiray.pacman.Pacman;
+import com.alpayyildiray.pacman.animations.PacmanAnimation;
+import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -39,8 +41,8 @@ public class Player extends Actor {
 	private float tileSize;
 	private float tickDelay = 0.05f;
 	
-	public Player(Pacman pacman) {
-		this.pacman = pacman;
+	public Player() {
+		this.pacman = ((GameStage)getStage()).getPacman();
 		tileSize = pacman.getTileSize();
 		
 		setSize(tileSize, tileSize);
@@ -49,7 +51,6 @@ public class Player extends Actor {
 		setPosition(0.0f, 0.0f);
 		
 		animation = new PacmanAnimation();
-//		Texture texture = new Texture(Gdx.files.internal("player.png"));
 		TextureRegion texture = animation.getTextureRegion();
 		sprite = new Sprite(texture);
 		sprite.setSize(tileSize, tileSize);

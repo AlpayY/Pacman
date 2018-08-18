@@ -8,24 +8,13 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class Playstage10 extends Stage {
-
-	public Playstage10() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Playstage10(Viewport viewport) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Playstage10(Viewport viewport, Batch batch) {
-		super(viewport, batch);
-	}
+public class Playstage10 extends GameStage {
 	
 	public Playstage10(Pacman pacman, Viewport viewport, Batch batch) {
-		this(viewport, batch);
-		addActor(new Level10Background(pacman));
-		addActor(new Player(pacman));
+		super(pacman, viewport, batch);
+		
+		addActor(new Level10Background());
+		addActor(new Player());
 		
 		Gdx.input.setInputProcessor(this);
 		setKeyboardFocus(getActors().get(1));

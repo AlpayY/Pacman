@@ -1,4 +1,4 @@
-package com.alpayyildiray.pacman.actors;
+package com.alpayyildiray.pacman.animations;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

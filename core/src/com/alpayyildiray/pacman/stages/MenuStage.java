@@ -4,28 +4,17 @@ import com.alpayyildiray.pacman.Pacman;
 import com.alpayyildiray.pacman.actors.MenuButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class MenuStage extends Stage {
-
-	public MenuStage() {
-		throw new UnsupportedOperationException();
-	}
-
-	public MenuStage(Viewport viewport) {
-		throw new UnsupportedOperationException();
-	}
-
-	public MenuStage(Viewport viewport, Batch batch) {
-		super(viewport, batch);
-	}
+public class MenuStage extends GameStage {
 	
 	public MenuStage(Pacman pacman, Viewport viewport, Batch batch) {
-		this(viewport, batch);
-		MenuButton menuButton = new MenuButton(pacman, 100, 100);
-		addActor(menuButton);
+		super(pacman, viewport, batch);
+		
+		MenuButton bStartGame = new MenuButton(100, 100, "Start game", () -> pacman.levelUp());
+		bStartGame.setName("StartGame");
+		addActor(bStartGame);
 		
 		Gdx.input.setInputProcessor(this);
 		setKeyboardFocus(getRoot());

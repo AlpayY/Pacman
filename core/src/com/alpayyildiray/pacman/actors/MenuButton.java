@@ -1,8 +1,11 @@
 package com.alpayyildiray.pacman.actors;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import com.alpayyildiray.pacman.Pacman;
+import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -20,14 +23,17 @@ public class MenuButton extends Actor {
 	private Sprite sprite;
 	private TextureRegion actualTexture;
 	
+	private String text = "";
 	private float positionX = 0f;
 	private float positionY = 0f;
 	private float sizeX = 300f;
 	private float sizeY = sizeX/3;
 	
-	public MenuButton(Pacman pacman, int posX, int posY) {
+	public MenuButton(int posX, int posY, String text, Runnable action) {
 		this.positionX = posX;
 		this.positionX = posY;
+		this.text = text;
+		Pacman pacman = ((GameStage)getStage()).getPacman();
 		
 		setSize(pacman.getWorldHeight(), pacman.getWorldWidth());
 		
@@ -58,7 +64,7 @@ public class MenuButton extends Actor {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				if(onButton(x, y)) {
-					pacman.levelUp();
+					action.run();
 				}
 				return true;
 			}

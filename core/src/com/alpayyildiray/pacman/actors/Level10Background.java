@@ -1,6 +1,7 @@
 package com.alpayyildiray.pacman.actors;
 
 import com.alpayyildiray.pacman.Pacman;
+import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -13,7 +14,9 @@ public class Level10Background extends Actor {
 	private float worldWidth;
 	private float worldHeight;
 
-	public Level10Background(Pacman pacman) {
+	public Level10Background() {
+		Pacman pacman = ((GameStage)getStage()).getPacman();
+		
 		worldWidth = pacman.getWorldWidth();
 		worldHeight = pacman.getWorldHeight();
 		
@@ -32,5 +35,4 @@ public class Level10Background extends Actor {
 		background.draw(batch, parentAlpha);
 		super.draw(batch, parentAlpha);
 	}
-
 }
