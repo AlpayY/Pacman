@@ -1,20 +1,24 @@
-package com.alpayyildiray.pacman.actors;
+package com.alpayyildiray.pacman.actors.backgrounds;
 
 import com.alpayyildiray.pacman.Pacman;
+import com.alpayyildiray.pacman.actors.PacmanActor;
 import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class Level10Background extends Actor {
+public class Level10Background extends PacmanActor {
 	
 	private Sprite background;
 	private float worldWidth;
 	private float worldHeight;
 
 	public Level10Background() {
+		background = new Sprite(new Texture(Gdx.files.internal("Level10.png")));
+	}
+	
+	public void init() {
 		Pacman pacman = ((GameStage)getStage()).getPacman();
 		
 		worldWidth = pacman.getWorldWidth();
@@ -24,7 +28,6 @@ public class Level10Background extends Actor {
 		setBounds(0, 0, getWidth(), getHeight());
 		setPosition(0.0f, 0.0f);
 		
-		background = new Sprite(new Texture(Gdx.files.internal("Level10.png")));
 		background.setPosition(0, 0);
 		background.setSize(worldWidth, worldHeight);
 		background.setBounds(0, 0, worldWidth, worldHeight);

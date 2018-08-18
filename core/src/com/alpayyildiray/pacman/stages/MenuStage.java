@@ -1,10 +1,10 @@
 package com.alpayyildiray.pacman.stages;
 
 import com.alpayyildiray.pacman.Pacman;
-import com.alpayyildiray.pacman.actors.MenuButton;
+import com.alpayyildiray.pacman.actors.gameobjects.MenuButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MenuStage extends GameStage {
@@ -12,13 +12,17 @@ public class MenuStage extends GameStage {
 	public MenuStage(Pacman pacman, Viewport viewport, Batch batch) {
 		super(pacman, viewport, batch);
 		
-		MenuButton bStartGame = new MenuButton(100, 100, "Start game", () -> pacman.levelUp());
+		Vector2 vStartGame = new Vector2(pacman.getWorldWidth()/2, pacman.getWorldHeight()/10*4);
+		Vector2 vExit = new Vector2(pacman.getWorldWidth()/2, pacman.getWorldHeight()/10*8);
+		
+		MenuButton bStartGame = new MenuButton(vStartGame.x, vStartGame.y, "START", () -> pacman.levelUp());
 		bStartGame.setName("StartGame");
+		MenuButton bExit = new MenuButton(vExit.x, vExit.y, "EXIT", () -> pacman.levelUp());
+		bExit.setName("ExitGame");
+		
 		addActor(bStartGame);
+		addActor(bExit);
 		
-		Gdx.input.setInputProcessor(this);
-		setKeyboardFocus(getRoot());
-		
-		viewport.getCamera().position.set(pacman.getWorldWidth() / 2, pacman.getWorldHeight() / 2, 0);
+		init();
 	}
 }

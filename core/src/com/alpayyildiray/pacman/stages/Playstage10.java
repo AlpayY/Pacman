@@ -1,8 +1,8 @@
 package com.alpayyildiray.pacman.stages;
 
 import com.alpayyildiray.pacman.Pacman;
-import com.alpayyildiray.pacman.actors.Level10Background;
-import com.alpayyildiray.pacman.actors.Player;
+import com.alpayyildiray.pacman.actors.backgrounds.Level10Background;
+import com.alpayyildiray.pacman.actors.entities.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,12 +13,16 @@ public class Playstage10 extends GameStage {
 	public Playstage10(Pacman pacman, Viewport viewport, Batch batch) {
 		super(pacman, viewport, batch);
 		
-		addActor(new Level10Background());
-		addActor(new Player());
+		Player player = new Player();
+		Level10Background bg = new Level10Background();
 		
-		Gdx.input.setInputProcessor(this);
-		setKeyboardFocus(getActors().get(1));
+		addActor(player);
+		addActor(bg);
 		
-		viewport.getCamera().position.set(pacman.getWorldWidth() / 2, pacman.getWorldHeight() / 2, 0);
+		player.setZIndex(10);
+		
+		setKeyboardFocus(player);
+		
+		init();
 	}
 }

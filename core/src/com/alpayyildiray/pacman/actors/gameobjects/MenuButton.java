@@ -1,20 +1,18 @@
-package com.alpayyildiray.pacman.actors;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+package com.alpayyildiray.pacman.actors.gameobjects;
 
 import com.alpayyildiray.pacman.Pacman;
+import com.alpayyildiray.pacman.actors.PacmanActor;
 import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 
-public class MenuButton extends Actor {
+public class MenuButton extends PacmanActor {
 
 	TextureRegion[] textures;
 	
@@ -26,16 +24,14 @@ public class MenuButton extends Actor {
 	private String text = "";
 	private float positionX = 0f;
 	private float positionY = 0f;
-	private float sizeX = 300f;
-	private float sizeY = sizeX/3;
+	private float sizeX = 0f;
+	private float sizeY = 0f;
+	private float margin = 30f;
 	
-	public MenuButton(int posX, int posY, String text, Runnable action) {
+	public MenuButton(float posX, float posY, String text, Runnable action) {
 		this.positionX = posX;
-		this.positionX = posY;
+		this.positionY = posY;
 		this.text = text;
-		Pacman pacman = ((GameStage)getStage()).getPacman();
-		
-		setSize(pacman.getWorldHeight(), pacman.getWorldWidth());
 		
 		Texture buttonSheet = new Texture(Gdx.files.internal("MenuButton-Sprite.png"));
 		TextureRegion pacmanRegion = new TextureRegion(buttonSheet);
@@ -51,7 +47,6 @@ public class MenuButton extends Actor {
 		
 		addListener(new InputListener() {
 			@Override
-//			@SuppressWarnings("unused")
 			public boolean mouseMoved(InputEvent event, float x, float y) {
 				if(onButton(x, y)) {
 					actualTexture = textures[1];
@@ -72,11 +67,25 @@ public class MenuButton extends Actor {
 		
 		sprite = new Sprite(actualTexture);
 	}
+	
+	public void init() {
+		Pacman pacman = ((GameStage)getStage()).getPacman();
+		
+		this.sizeX = pacman.getWorldWidth() / 3;
+		this.sizeY = pacman.getWorldHeight() / 9;
+		margin = pacman.getWorldWidth()/10;
+		
+		setSize(sizeX + margin*2, sizeY + margin*2);
+		setBounds(0, 0, getWidth(), getHeight());
+		setPosition(positionX - margin, positionY - margin);
+		
+		sprite.setSize(sizeX, sizeY);
+		sprite.setOriginCenter();
+		sprite.setPosition(positionX, positionY);
+	}
 
 	@Override
 	public void act(float delta) {
-		sprite.setSize(sizeX, sizeY);
-		sprite.setPosition(positionX, positionY);
 		sprite.setRegion(actualTexture);
 		super.act(delta);
 	}
@@ -88,7 +97,12 @@ public class MenuButton extends Actor {
 	}
 	
 	private boolean onButton(float x, float y) {
-		if(x >= positionX && x <= positionX + sizeX && y >= positionY && y <= positionY + sizeY) {
+		float leftBorder = margin;
+		float rightBorder = sizeX + margin;
+		float lowerBorder = margin;
+		float upperBorder = sizeY + margin;
+		
+		if(x >= leftBorder && x <= rightBorder && y >= lowerBorder && y <= upperBorder) {
 			return true;
 		} else {
 			return false;

@@ -84,7 +84,7 @@ public class Pacman extends ApplicationAdapter {
 		return worldHeight;
 	}
 	
-	public float getTileSize() {
+	public int getTileSize() {
 		return tileSize;
 	}
 	

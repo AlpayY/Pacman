@@ -1,18 +1,20 @@
-package com.alpayyildiray.pacman.actors;
+package com.alpayyildiray.pacman.actors.entities;
 
 import com.alpayyildiray.pacman.Pacman;
+import com.alpayyildiray.pacman.actors.PacmanActor;
 import com.alpayyildiray.pacman.animations.PacmanAnimation;
 import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
-public class Player extends Actor {
+public class Player extends PacmanActor {
 	
 	private enum Direction {
 		UP(180.0f),
@@ -42,21 +44,10 @@ public class Player extends Actor {
 	private float tickDelay = 0.05f;
 	
 	public Player() {
-		this.pacman = ((GameStage)getStage()).getPacman();
-		tileSize = pacman.getTileSize();
-		
-		setSize(tileSize, tileSize);
-		setOrigin(tileSize/2, tileSize/2);
-		setBounds(0, 0, getWidth(), getHeight());
-		setPosition(0.0f, 0.0f);
-		
+		setType(Type.PLAYER);
 		animation = new PacmanAnimation();
 		TextureRegion texture = animation.getTextureRegion();
 		sprite = new Sprite(texture);
-		sprite.setSize(tileSize, tileSize);
-		sprite.setBounds(0, 0, tileSize, tileSize);
-		sprite.setOrigin(getOriginX(), getOriginY());
-		sprite.setColor(1.0f, 1.0f, 0.0f, 1.0f);
 		
 		addListener(new InputListener() {
 			@Override
@@ -90,6 +81,21 @@ public class Player extends Actor {
 				return true;
 			}
 		});
+	}
+	
+	public void init() {
+		this.pacman = ((GameStage)getStage()).getPacman();
+		
+		tileSize = pacman.getTileSize();
+		
+		setSize(tileSize, tileSize);
+		setBounds(0, 0, getWidth(), getHeight());
+		setPosition(0.0f, 0.0f);
+		
+		sprite.setSize(tileSize, tileSize);
+		sprite.setBounds(0, 0, tileSize, tileSize);
+		sprite.setOrigin(tileSize/2, tileSize/2);
+		sprite.setColor(1.0f, 1.0f, 0.0f, 1.0f);
 	}
 	
 	@Override
@@ -163,10 +169,30 @@ public class Player extends Actor {
 	}
 	
 	private boolean canMove(Direction d) {
-		float potentialUp = getY() + tileSize;
-		float potentialRight = getX() + tileSize;
-		float potentialDown = getY();
-		float potentialLeft = getX();
+		float potentialUp = sprite.getY() + tileSize;
+		float potentialRight = sprite.getX() + tileSize;
+		float potentialDown = sprite.getY() - tileSize;
+		float potentialLeft = sprite.getX() - tileSize;
+		
+		Vector2 vector = getStage().screenToStageCoordinates(new Vector2(sprite.getX(), sprite.getY()));
+		
+		switch(d) {
+			case UP:
+				vector = getStage().screenToStageCoordinates(new Vector2(potentialUp, sprite.getY()));
+				break;
+			case RIGHT:
+				vector = getStage().screenToStageCoordinates(new Vector2(sprite.getX(), potentialLeft));
+				break;
+			case DOWN:
+				vector = getStage().screenToStageCoordinates(new Vector2(potentialDown, sprite.getY()));
+				break;
+			case LEFT:
+				vector = getStage().screenToStageCoordinates(new Vector2(sprite.getX(), potentialLeft));
+				break;
+		}
+		if(isWall(vector)) {
+			return false;
+		}
 		
 		switch(d) {
 			case UP:
@@ -180,17 +206,26 @@ public class Player extends Actor {
 				}
 				break;
 			case DOWN:
-				if(potentialDown > 1) {
+				if(potentialDown > -1) {
 					return true;
 				}
 				break;
 			case LEFT:
-				if(potentialLeft > 1) {
+				if(potentialLeft > -1) {
 					return true;
 				}
 				break;
 		}
 		
 		return false;
+	}
+	
+	public boolean isWall(Vector2 vector) {
+		try {
+			PacmanActor actor = (PacmanActor)(getStage().hit(vector.x, vector.y, false));
+			return actor.getType() == Type.WALL;
+		} catch(NullPointerException e) {
+			return false;
+		}
 	}
 }
