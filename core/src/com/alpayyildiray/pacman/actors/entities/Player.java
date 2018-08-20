@@ -1,5 +1,8 @@
 package com.alpayyildiray.pacman.actors.entities;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import com.alpayyildiray.pacman.Pacman;
 import com.alpayyildiray.pacman.actors.PacmanActor;
 import com.alpayyildiray.pacman.animations.PacmanAnimation;
@@ -9,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -33,15 +35,34 @@ public class Player extends PacmanActor {
 	}	
 
 	private Pacman pacman;
+	private GameStage stage;
 	private PacmanAnimation animation;
 	private Sprite sprite;
+	private Queue<Integer> inputQueue = new LinkedList<Integer>();
 	
-	private static float movingSpeed = 0.2f;
+	private static final float movingSpeed = 0.2f;
+	private static final int inputHoldTime = 250;
 	
 	private Direction facing = Direction.RIGHT;
 	private Direction moving = Direction.RIGHT;
 	private float tileSize;
 	private float tickDelay = 0.05f;
+	
+	public class KeyEvent {
+		KeyEvent(int keycode) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						Integer integer = keycode;
+						inputQueue.offer(integer);
+						Thread.sleep(inputHoldTime);
+						inputQueue.remove(integer);
+					} catch(InterruptedException e) {}
+				}
+			}).start();
+		}
+	}
 	
 	public Player() {
 		setType(Type.PLAYER);
@@ -52,41 +73,17 @@ public class Player extends PacmanActor {
 		addListener(new InputListener() {
 			@Override
 			public boolean keyDown(InputEvent event, int keycode) {
-				switch(keycode) {
-					case Input.Keys.UP: {
-						if(canMove(Direction.UP)) {
-							facing = Direction.UP;
-						}
-						break;
-					}
-					case Input.Keys.RIGHT: {
-						if(canMove(Direction.RIGHT)) {
-							facing = Direction.RIGHT;
-						}
-						break;
-					}
-					case Input.Keys.DOWN: {
-						if(canMove(Direction.DOWN)) {
-							facing = Direction.DOWN;
-						}
-						break;
-					}
-					case Input.Keys.LEFT: {
-						if(canMove(Direction.LEFT)) {
-							facing = Direction.LEFT;
-						}
-						break;
-					}
-				}
+				new KeyEvent(keycode);
 				return true;
 			}
 		});
 	}
 	
 	public void init() {
-		this.pacman = ((GameStage)getStage()).getPacman();
+		this.stage = (GameStage)getStage();
+		this.pacman = stage.getPacman();
 		
-		tileSize = pacman.getTileSize();
+		tileSize = stage.getTileSize();
 		
 		setSize(tileSize, tileSize);
 		setBounds(0, 0, getWidth(), getHeight());
@@ -106,6 +103,8 @@ public class Player extends PacmanActor {
 	
 	@Override
 	public void act(float deltaT) {
+		handleKeyInput();
+		
 		if(!hasActions()) {
 			if(tickDelay > 0.0f) {
 				tickDelay = 0.0f;
@@ -116,7 +115,11 @@ public class Player extends PacmanActor {
 				adjustedSpeed = 0.0f;
 			}
 			if(!canMove(facing)) {
-				return;
+				if(canMove(moving)) {
+					facing = moving;
+				} else {
+					return;
+				}
 			}
 			switch(facing) {
 				case UP: {
@@ -150,6 +153,11 @@ public class Player extends PacmanActor {
 		} else {
 			tickDelay = 0.05f;
 			animation.act(deltaT);
+			if(eatsFood()) {
+				PacmanActor food = getLocal();
+				food.setVisible(false);
+				stage.setFoodCount(stage.getFoodCount()-1);
+			}
 		}
 		super.act(deltaT);
 	}
@@ -164,30 +172,69 @@ public class Player extends PacmanActor {
 		super.draw(batch, parentAlpha);
 	}
 	
+	private void handleKeyInput() {
+		Integer[] inputs = new Integer[inputQueue.size()]; 
+		inputs = inputQueue.toArray(inputs);
+		for(Integer keycode : inputs) {
+			try {
+				switch(keycode) {
+					case Input.Keys.UP: {
+						if(canMove(Direction.UP)) {
+							facing = Direction.UP;
+						}
+						break;
+					}
+					case Input.Keys.RIGHT: {
+						if(canMove(Direction.RIGHT)) {
+							facing = Direction.RIGHT;
+						}
+						break;
+					}
+					case Input.Keys.DOWN: {
+						if(canMove(Direction.DOWN)) {
+							facing = Direction.DOWN;
+						}
+						break;
+					}
+					case Input.Keys.LEFT: {
+						if(canMove(Direction.LEFT)) {
+							facing = Direction.LEFT;
+						}
+						break;
+					}
+				}
+			} catch(NullPointerException e) {
+				continue;
+			}
+		}
+	}
+	
 	private boolean stopped() {
 		return canMove(moving);
 	}
 	
 	private boolean canMove(Direction d) {
-		float potentialUp = sprite.getY() + tileSize;
-		float potentialRight = sprite.getX() + tileSize;
-		float potentialDown = sprite.getY() - tileSize;
-		float potentialLeft = sprite.getX() - tileSize;
+		float spriteX = sprite.getOriginX() + sprite.getX();
+		float spriteY = sprite.getOriginY() + sprite.getY();
+		float potentialUp = spriteY + tileSize;
+		float potentialRight = spriteX + tileSize;
+		float potentialDown = spriteY - tileSize;
+		float potentialLeft = spriteX - tileSize;
 		
-		Vector2 vector = getStage().screenToStageCoordinates(new Vector2(sprite.getX(), sprite.getY()));
+		Vector2 vector = new Vector2(spriteX, spriteY);
 		
 		switch(d) {
 			case UP:
-				vector = getStage().screenToStageCoordinates(new Vector2(potentialUp, sprite.getY()));
+				vector = new Vector2(spriteX, potentialUp);
 				break;
 			case RIGHT:
-				vector = getStage().screenToStageCoordinates(new Vector2(sprite.getX(), potentialLeft));
+				vector = new Vector2(potentialRight, spriteY);
 				break;
 			case DOWN:
-				vector = getStage().screenToStageCoordinates(new Vector2(potentialDown, sprite.getY()));
+				vector = new Vector2(spriteX, potentialDown);
 				break;
 			case LEFT:
-				vector = getStage().screenToStageCoordinates(new Vector2(sprite.getX(), potentialLeft));
+				vector = new Vector2(potentialLeft, spriteY);
 				break;
 		}
 		if(isWall(vector)) {
@@ -196,12 +243,12 @@ public class Player extends PacmanActor {
 		
 		switch(d) {
 			case UP:
-				if(potentialUp - 1 < pacman.getWorldHeight() - tileSize) {
+				if(potentialUp - 1 < pacman.getWorldHeight() - tileSize/2) {
 					return true;
 				}
 				break;
 			case RIGHT:
-				if(potentialRight - 1 < pacman.getWorldWidth() - tileSize) {
+				if(potentialRight - 1 < pacman.getWorldWidth() - tileSize/2) {
 					return true;
 				}
 				break;
@@ -222,10 +269,26 @@ public class Player extends PacmanActor {
 	
 	public boolean isWall(Vector2 vector) {
 		try {
-			PacmanActor actor = (PacmanActor)(getStage().hit(vector.x, vector.y, false));
+			PacmanActor actor = getObjectAt(vector);
 			return actor.getType() == Type.WALL;
 		} catch(NullPointerException e) {
 			return false;
 		}
+	}
+	
+	public boolean eatsFood() {
+		return getLocal().getType() == Type.FOOD;
+	}
+	
+	public PacmanActor getLocal() {
+		float spriteX = sprite.getOriginX() + sprite.getX();
+		float spriteY = sprite.getOriginY() + sprite.getY();
+		
+		Vector2 vector = new Vector2(spriteX, spriteY);
+		return getObjectAt(vector);
+	}
+	
+	private PacmanActor getObjectAt(Vector2 vector) {
+		return (PacmanActor)(getStage().hit(vector.x, vector.y, false));
 	}
 }

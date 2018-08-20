@@ -22,10 +22,6 @@ public class Pacman extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private Viewport viewport;
 	
-	private final int xTiles = 20;
-	private final int yTiles = 20;
-	private int tileSize;
-	
 	private float worldWidth = 800;
 	private float worldHeight = 800;
 	private float aspectRatio;
@@ -34,7 +30,6 @@ public class Pacman extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		
-		tileSize = (int)worldHeight / yTiles;
 		aspectRatio = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
 		
 		camera = new OrthographicCamera();
@@ -71,7 +66,7 @@ public class Pacman extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height) {
 		aspectRatio = (float)Gdx.graphics.getWidth() / (float)Gdx.graphics.getHeight();
-//		viewport.update(width, height);
+		viewport.update(width, height);
 		camera.position.set(worldWidth / 2, worldHeight / 2, 0);
 		super.resize(width, height);
 	}
@@ -82,10 +77,6 @@ public class Pacman extends ApplicationAdapter {
 	
 	public float getWorldHeight() {
 		return worldHeight;
-	}
-	
-	public int getTileSize() {
-		return tileSize;
 	}
 	
 	@Override

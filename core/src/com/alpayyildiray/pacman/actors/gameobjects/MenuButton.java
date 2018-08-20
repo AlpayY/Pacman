@@ -97,12 +97,14 @@ public class MenuButton extends PacmanActor {
 	}
 	
 	private boolean onButton(float x, float y) {
+		Vector2 vector = new Vector2(x, y);
+		
 		float leftBorder = margin;
 		float rightBorder = sizeX + margin;
 		float lowerBorder = margin;
 		float upperBorder = sizeY + margin;
 		
-		if(x >= leftBorder && x <= rightBorder && y >= lowerBorder && y <= upperBorder) {
+		if(vector.x >= leftBorder && vector.x <= rightBorder && vector.y >= lowerBorder && vector.y <= upperBorder) {
 			return true;
 		} else {
 			return false;

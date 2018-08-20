@@ -8,14 +8,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-public class Level10Background extends PacmanActor {
+public class WindowBackground extends PacmanActor{
 	
 	private Sprite background;
 	private float worldWidth;
 	private float worldHeight;
 
-	public Level10Background() {
-		background = new Sprite(new Texture(Gdx.files.internal("Level10.png")));
+	public WindowBackground(String file) {
+		super();
+		background = new Sprite(new Texture(Gdx.files.internal(file)));
 	}
 	
 	public void init() {

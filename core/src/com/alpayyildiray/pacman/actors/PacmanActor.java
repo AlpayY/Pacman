@@ -1,12 +1,13 @@
 package com.alpayyildiray.pacman.actors;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 
-public class PacmanActor extends Actor {
+public class PacmanActor extends Group {
 	
 	public enum Type {
 		NONE,
 		PLAYER,
+		FOOD,
 		ENEMY,
 		WALL;
 	}

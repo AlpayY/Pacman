@@ -1,32 +1,34 @@
 package com.alpayyildiray.pacman.actors.gameobjects;
 
 import com.alpayyildiray.pacman.actors.PacmanActor;
+import com.alpayyildiray.pacman.actors.PacmanActor.Type;
 import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-public class GameWall extends PacmanActor {
-	
+public class GameFood extends PacmanActor {
+
 	private Texture texture;
 	private Sprite sprite;
 	
 	private float offset = 5f;
 	private float tileSize = 0f;
+	private float scaleFactor = 0.4f;
 	
-	public GameWall() {
+	public GameFood() {
 		this(-100, 0);
 	}
 	
-	public GameWall(float posX, float posY) {
-		setType(Type.WALL);
+	public GameFood(float posX, float posY) {
+		setType(Type.FOOD);
 		setPosition(posX, posY);
 		
-		texture = new Texture(Gdx.files.internal("Wall.png"));
+		texture = new Texture(Gdx.files.internal("Food.png"));
 		sprite = new Sprite(texture);
 	}
-	
+
 	public void init() {
 		GameStage stage = (GameStage)getStage();
 		
@@ -34,14 +36,14 @@ public class GameWall extends PacmanActor {
 		
 		setSize(tileSize - offset*2, tileSize - offset*2);
 		setBounds(getX(), getY(), tileSize - offset*2, tileSize - offset*2);
-		sprite.setSize(tileSize, tileSize);
+		sprite.setSize(tileSize*scaleFactor, tileSize*scaleFactor);
 	}
 	
 	public void setPosition(int x, int y) {
 		float posX = x * tileSize;
 		float posY = y * tileSize;
 		setPosition(posX + offset, posY + offset);
-		sprite.setPosition(posX, posY);
+		sprite.setPosition(posX+tileSize/2-sprite.getWidth()/2, posY+tileSize/2-sprite.getHeight()/2);
 	}
 	
 	@Override
