@@ -4,13 +4,15 @@ import com.alpayyildiray.pacman.Pacman;
 import com.alpayyildiray.pacman.actors.PacmanActor;
 import com.alpayyildiray.pacman.actors.PacmanActor.Type;
 import com.alpayyildiray.pacman.actors.gameobjects.MenuButton;
+import com.alpayyildiray.pacman.stages.wallgroups.PacmanObjectGroup;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class GameStage extends Stage {
+public class GameStage extends Stage implements Screen {
 
 	private Pacman pacman;
 	public int tileCountX;
@@ -46,7 +48,7 @@ public class GameStage extends Stage {
 		
 		Gdx.input.setInputProcessor(this);
 		
-		getViewport().getCamera().position.set(pacman.getWorldWidth() / 2, pacman.getWorldHeight() / 2, 0);
+//		getViewport().getCamera().position.set(pacman.getWorldWidth() / 2, pacman.getWorldHeight() / 2, 0);
 	}
 	
 	public void setTilesX(int tiles) {
@@ -78,11 +80,37 @@ public class GameStage extends Stage {
 	}
 	
 	public int getFoodCount() {
-		PacmanActor actors[] = (PacmanActor[])(getActors().toArray());
-		int count = 0;
-		for(PacmanActor actor : actors) {
-			if(actor.getType() == Type.FOOD) ++count;
-		}
-		return count;
+		return totalFood;
+	}
+
+	@Override
+	public void show() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void render(float delta) {
+		draw();
+		return;
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		return;
+	}
+
+	@Override
+	public void pause() {
+		return;
+	}
+
+	@Override
+	public void resume() {
+		return;
+	}
+
+	@Override
+	public void hide() {
+		return;
 	}
 }

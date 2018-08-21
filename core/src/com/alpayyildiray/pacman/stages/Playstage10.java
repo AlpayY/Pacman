@@ -20,7 +20,7 @@ public class Playstage10 extends GameStage {
 		setTilesX(xTiles);
 		setTilesY(yTiles);
 		
-		WindowBackground bg = new WindowBackground("Level10.png");
+		WindowBackground bg = new WindowBackground("20-to-20-background.png");
 		Player player = new Player();
 		
 		addActor(bg);

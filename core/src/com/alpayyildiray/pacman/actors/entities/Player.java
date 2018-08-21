@@ -7,6 +7,7 @@ import com.alpayyildiray.pacman.Pacman;
 import com.alpayyildiray.pacman.actors.PacmanActor;
 import com.alpayyildiray.pacman.animations.PacmanAnimation;
 import com.alpayyildiray.pacman.stages.GameStage;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -40,15 +41,16 @@ public class Player extends PacmanActor {
 	private Sprite sprite;
 	private Queue<Integer> inputQueue = new LinkedList<Integer>();
 	
-	private static final float movingSpeed = 0.2f;
-	private static final int inputHoldTime = 250;
-	
+	private static float movingSpeed = 0.2f;
 	private Direction facing = Direction.RIGHT;
 	private Direction moving = Direction.RIGHT;
 	private float tileSize;
 	private float tickDelay = 0.05f;
 	
 	public class KeyEvent {
+		
+		private static final int inputHoldTime = 250;
+		
 		KeyEvent(int keycode) {
 			new Thread(new Runnable() {
 				@Override
@@ -73,6 +75,9 @@ public class Player extends PacmanActor {
 		addListener(new InputListener() {
 			@Override
 			public boolean keyDown(InputEvent event, int keycode) {
+				if(keycode == Input.Keys.ESCAPE) {
+					pacman.setLevel(0);
+				}
 				new KeyEvent(keycode);
 				return true;
 			}
@@ -86,18 +91,18 @@ public class Player extends PacmanActor {
 		tileSize = stage.getTileSize();
 		
 		setSize(tileSize, tileSize);
-		setBounds(0, 0, getWidth(), getHeight());
+//		setBounds(0, 0, getWidth(), getHeight());
 		setPosition(0.0f, 0.0f);
 		
-		sprite.setSize(tileSize, tileSize);
-		sprite.setBounds(0, 0, tileSize, tileSize);
-		sprite.setOrigin(tileSize/2, tileSize/2);
+//		sprite.setSize(tileSize-2, tileSize-2);
+		sprite.setBounds(2, 2, tileSize-2, tileSize-2);
+		sprite.setOrigin(tileSize/2-1, tileSize/2-1);
 		sprite.setColor(1.0f, 1.0f, 0.0f, 1.0f);
 	}
 	
 	@Override
 	protected void positionChanged() {
-		sprite.setPosition(getX(), getY());
+		sprite.setPosition(getX()+2f, getY()+2f);
 		super.positionChanged();
 	}
 	
@@ -214,8 +219,10 @@ public class Player extends PacmanActor {
 	}
 	
 	private boolean canMove(Direction d) {
-		float spriteX = sprite.getOriginX() + sprite.getX();
-		float spriteY = sprite.getOriginY() + sprite.getY();
+//		float spriteX = sprite.getOriginX() + sprite.getX();
+//		float spriteY = sprite.getOriginY() + sprite.getY();
+		float spriteX = tileSize/2 + getX();
+		float spriteY = tileSize/2 + getY();
 		float potentialUp = spriteY + tileSize;
 		float potentialRight = spriteX + tileSize;
 		float potentialDown = spriteY - tileSize;
@@ -276,8 +283,13 @@ public class Player extends PacmanActor {
 		}
 	}
 	
+	public void setMovingSpeed(float speed) {
+		movingSpeed = speed;
+	}
+
 	public boolean eatsFood() {
-		return getLocal().getType() == Type.FOOD;
+		boolean result =  getLocal().getType() == Type.FOOD;
+		return result;
 	}
 	
 	public PacmanActor getLocal() {
@@ -285,7 +297,10 @@ public class Player extends PacmanActor {
 		float spriteY = sprite.getOriginY() + sprite.getY();
 		
 		Vector2 vector = new Vector2(spriteX, spriteY);
-		return getObjectAt(vector);
+		toBack();
+		PacmanActor actor = getObjectAt(vector);
+		toFront();
+		return actor;
 	}
 	
 	private PacmanActor getObjectAt(Vector2 vector) {

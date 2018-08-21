@@ -32,15 +32,15 @@ public class GameWall extends PacmanActor {
 		
 		tileSize = stage.getTileSize();
 		
-		setSize(tileSize - offset*2, tileSize - offset*2);
-		setBounds(getX(), getY(), tileSize - offset*2, tileSize - offset*2);
-		sprite.setSize(tileSize, tileSize);
+//		setSize(tileSize - offset*2, tileSize - offset*2);
+		setBounds(getX()+offset, getY()+offset, tileSize - offset, tileSize - offset);
+		sprite.setSize(tileSize+1.5f, tileSize+1.5f);
 	}
 	
 	public void setPosition(int x, int y) {
 		float posX = x * tileSize;
 		float posY = y * tileSize;
-		setPosition(posX + offset, posY + offset);
+		setPosition(posX+offset, posY+offset);
 		sprite.setPosition(posX, posY);
 	}
 	

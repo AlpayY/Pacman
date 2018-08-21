@@ -1,10 +1,12 @@
 package com.alpayyildiray.pacman.stages.wallgroups;
 
 import java.awt.IllegalComponentStateException;
+import java.io.ObjectInputStream.GetField;
 
 import com.alpayyildiray.pacman.actors.PacmanActor;
 import com.alpayyildiray.pacman.actors.gameobjects.GameFood;
 import com.alpayyildiray.pacman.actors.gameobjects.GameWall;
+import com.alpayyildiray.pacman.stages.GameStage;
 
 public class PacmanObjectGroup extends PacmanActor {
 
@@ -65,6 +67,7 @@ public class PacmanObjectGroup extends PacmanActor {
 		int xTiles = wallArray.length;
 		int yTiles = wallArray[0].length;
 		
+		GameStage stage = ((GameStage)getStage());
 		gameWallArray = new GameWall[xTiles][yTiles];
 		gameFoodArray = new GameFood[xTiles][yTiles];
 		for(int a = 0; a < xTiles; a++) {
@@ -72,6 +75,7 @@ public class PacmanObjectGroup extends PacmanActor {
 				switch(wallArray[a][b]) {
 					case 0:
 						gameFoodArray[a][b] = new GameFood();
+						stage.setFoodCount(stage.getFoodCount());
 						break;
 					case 1:
 					case 2:

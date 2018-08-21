@@ -4,8 +4,11 @@ import com.alpayyildiray.pacman.Pacman;
 import com.alpayyildiray.pacman.actors.PacmanActor;
 import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -20,6 +23,8 @@ public class MenuButton extends PacmanActor {
 	
 	private Sprite sprite;
 	private TextureRegion actualTexture;
+	private BitmapFont font;
+	private GlyphLayout layout;
 	
 	private String text = "";
 	private float positionX = 0f;
@@ -66,6 +71,8 @@ public class MenuButton extends PacmanActor {
 		});
 		
 		sprite = new Sprite(actualTexture);
+		font = new BitmapFont();
+		layout = new GlyphLayout(font, text);
 	}
 	
 	public void init() {
@@ -73,10 +80,12 @@ public class MenuButton extends PacmanActor {
 		
 		this.sizeX = pacman.getWorldWidth() / 3;
 		this.sizeY = pacman.getWorldHeight() / 9;
-		margin = pacman.getWorldWidth()/10;
+		this.positionX = this.positionX - sizeX/2;
+		this.positionY = this.positionY - sizeY/2;
+		margin = pacman.getWorldWidth()/16;
 		
 		setSize(sizeX + margin*2, sizeY + margin*2);
-		setBounds(0, 0, getWidth(), getHeight());
+//		setBounds(0, 0, getWidth(), getHeight());
 		setPosition(positionX - margin, positionY - margin);
 		
 		sprite.setSize(sizeX, sizeY);
@@ -93,6 +102,8 @@ public class MenuButton extends PacmanActor {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		sprite.draw(batch, parentAlpha);
+		font.setColor(Color.BLACK);
+		font.draw(batch, layout, positionX + (sizeX - layout.width) / 2, positionY + (sizeY + layout.height) / 2);
 		super.draw(batch, parentAlpha);
 	}
 	

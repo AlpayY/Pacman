@@ -27,6 +27,7 @@ public class ObjectGroup10 extends PacmanObjectGroup {
 				{0,0,0,0,1,1,0,0,0,0},
 		};
 		int[][] wallGroup = mirrorHalfGroup(wallGridHalf);
+		wallGroup[0][0] = 3;
 		setWallArray(wallGroup);
 	}
 }
