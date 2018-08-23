@@ -1,8 +1,9 @@
-package com.alpayyildiray.pacman.stages;
+package com.alpayyildiray.pacman.stages.levels;
 
 import com.alpayyildiray.pacman.Pacman;
 import com.alpayyildiray.pacman.actors.backgrounds.WindowBackground;
 import com.alpayyildiray.pacman.actors.gameobjects.MenuButton;
+import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -26,7 +27,5 @@ public class MenuStage extends GameStage {
 		addActor(background);
 		addActor(bStartGame);
 		addActor(bExit);
-		
-		init();
 	}
 }

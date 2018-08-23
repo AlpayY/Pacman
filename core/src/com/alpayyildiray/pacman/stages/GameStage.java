@@ -1,5 +1,7 @@
 package com.alpayyildiray.pacman.stages;
 
+import java.awt.IllegalComponentStateException;
+
 import com.alpayyildiray.pacman.Pacman;
 import com.alpayyildiray.pacman.actors.PacmanActor;
 import com.alpayyildiray.pacman.actors.PacmanActor.Type;
@@ -15,8 +17,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class GameStage extends Stage implements Screen {
 
 	private Pacman pacman;
-	public int tileCountX;
-	public int tileCountY;
+	public int tileCountX = 0;
+	public int tileCountY = 0;
 	
 	public int totalFood = 0;
 
@@ -47,8 +49,6 @@ public class GameStage extends Stage implements Screen {
 		}
 		
 		Gdx.input.setInputProcessor(this);
-		
-//		getViewport().getCamera().position.set(pacman.getWorldWidth() / 2, pacman.getWorldHeight() / 2, 0);
 	}
 	
 	public void setTilesX(int tiles) {
@@ -60,14 +60,20 @@ public class GameStage extends Stage implements Screen {
 	}
 	
 	public void setFoodCount(int count) {
+		if(count == 0) {
+			pacman.setLevel(0);
+		}
 		totalFood = count;
 	}
 	
 	public int getTileSize() {
+		if(tileCountX <= 0 || tileCountY <= 0) {
+			throw new IllegalComponentStateException("Tile count invalid! Not set?");
+		}
 		if(tileCountX < tileCountY) {
-			return (int)pacman.getWorldHeight() / tileCountY;
-		} else {
 			return (int)pacman.getWorldWidth() / tileCountX;
+		} else {
+			return (int)pacman.getWorldHeight() / tileCountY;
 		}
 	}
 	

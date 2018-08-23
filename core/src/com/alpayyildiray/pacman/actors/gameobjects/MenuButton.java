@@ -1,8 +1,6 @@
 package com.alpayyildiray.pacman.actors.gameobjects;
 
-import com.alpayyildiray.pacman.Pacman;
 import com.alpayyildiray.pacman.actors.PacmanActor;
-import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -76,16 +74,22 @@ public class MenuButton extends PacmanActor {
 	}
 	
 	public void init() {
-		Pacman pacman = ((GameStage)getStage()).getPacman();
+//		getPacman()Actor parent = this;
+//		while(hasParent()) {
+//			parent = (getPacman()Actor)parent.getParent();
+//		}
+//		GamegetParentStage() getParentStage() = (GamegetParentStage())parent.getgetParentStage()();
+//		getPacman() getPacman() = getParentStage().getgetPacman()();
+		super.init();
 		
-		this.sizeX = pacman.getWorldWidth() / 3;
-		this.sizeY = pacman.getWorldHeight() / 9;
+		this.sizeX = getPacman().getWorldWidth() / 3;
+		this.sizeY = getPacman().getWorldHeight() / 9;
 		this.positionX = this.positionX - sizeX/2;
 		this.positionY = this.positionY - sizeY/2;
-		margin = pacman.getWorldWidth()/16;
+		margin = getPacman().getWorldWidth()/16;
 		
 		setSize(sizeX + margin*2, sizeY + margin*2);
-//		setBounds(0, 0, getWidth(), getHeight());
+		setBounds(0, 0, getWidth(), getHeight());
 		setPosition(positionX - margin, positionY - margin);
 		
 		sprite.setSize(sizeX, sizeY);
@@ -102,8 +106,8 @@ public class MenuButton extends PacmanActor {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		sprite.draw(batch, parentAlpha);
-		font.setColor(Color.BLACK);
-		font.draw(batch, layout, positionX + (sizeX - layout.width) / 2, positionY + (sizeY + layout.height) / 2);
+//		font.setColor(Color.BLACK); // NOT WORKING
+		font.draw(batch, layout, positionX + (sizeX - layout.width)/2, positionY + (sizeY + layout.height)/2);
 		super.draw(batch, parentAlpha);
 	}
 	

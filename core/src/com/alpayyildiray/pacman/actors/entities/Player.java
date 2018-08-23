@@ -6,13 +6,13 @@ import java.util.Queue;
 import com.alpayyildiray.pacman.Pacman;
 import com.alpayyildiray.pacman.actors.PacmanActor;
 import com.alpayyildiray.pacman.animations.PacmanAnimation;
-import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -35,8 +35,6 @@ public class Player extends PacmanActor {
 		}
 	}	
 
-	private Pacman pacman;
-	private GameStage stage;
 	private PacmanAnimation animation;
 	private Sprite sprite;
 	private Queue<Integer> inputQueue = new LinkedList<Integer>();
@@ -76,7 +74,7 @@ public class Player extends PacmanActor {
 			@Override
 			public boolean keyDown(InputEvent event, int keycode) {
 				if(keycode == Input.Keys.ESCAPE) {
-					pacman.setLevel(0);
+					getPacman().setLevel(0);
 				}
 				new KeyEvent(keycode);
 				return true;
@@ -85,10 +83,15 @@ public class Player extends PacmanActor {
 	}
 	
 	public void init() {
-		this.stage = (GameStage)getStage();
-		this.pacman = stage.getPacman();
+//		PacmanActor parent = this;
+//		while(hasParent()) {
+//			parent = (PacmanActor)parent.getParent();
+//		}
+//		this.getParentStage() = (GamegetParentStage())parent.getgetParentStage()();
+//		this.pacman = getParentStage().getPacman();
+		super.init();
 		
-		tileSize = stage.getTileSize();
+		tileSize = getParentStage().getTileSize();
 		
 		setSize(tileSize, tileSize);
 //		setBounds(0, 0, getWidth(), getHeight());
@@ -160,19 +163,31 @@ public class Player extends PacmanActor {
 			animation.act(deltaT);
 			if(eatsFood()) {
 				PacmanActor food = getLocal();
-				food.setVisible(false);
-				stage.setFoodCount(stage.getFoodCount()-1);
+//				food.setVisible(false);
+				boolean removed = false;
+				for(Actor each : getParentStage().getRoot().getChildren().toArray()) {
+					PacmanActor actor = (PacmanActor)each;
+					if(actor.removeActor(food)) {
+						removed = true;
+						break;
+					}
+				}
+				if(removed == true) {
+					getParentStage().setFoodCount(getParentStage().getFoodCount()-1);
+				}
 			}
+		}
+		
+		sprite.setRegion(animation.getTextureRegion());
+		if(moving.equals(facing)) {
+			sprite.setRotation(facing.asFloat());
 		}
 		super.act(deltaT);
 	}
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
-		sprite.setRegion(animation.getTextureRegion());
-		if(moving.equals(facing)) {
-			sprite.setRotation(facing.asFloat());
-		}
+		
 		sprite.draw(batch);
 		super.draw(batch, parentAlpha);
 	}
@@ -250,12 +265,12 @@ public class Player extends PacmanActor {
 		
 		switch(d) {
 			case UP:
-				if(potentialUp - 1 < pacman.getWorldHeight() - tileSize/2) {
+				if(potentialUp - 1 < getPacman().getWorldHeight() - tileSize/2) {
 					return true;
 				}
 				break;
 			case RIGHT:
-				if(potentialRight - 1 < pacman.getWorldWidth() - tileSize/2) {
+				if(potentialRight - 1 < getPacman().getWorldWidth() - tileSize/2) {
 					return true;
 				}
 				break;
@@ -304,6 +319,6 @@ public class Player extends PacmanActor {
 	}
 	
 	private PacmanActor getObjectAt(Vector2 vector) {
-		return (PacmanActor)(getStage().hit(vector.x, vector.y, false));
+		return (PacmanActor)(getParentStage().hit(vector.x, vector.y, false));
 	}
 }

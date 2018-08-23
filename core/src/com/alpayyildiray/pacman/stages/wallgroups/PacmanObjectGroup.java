@@ -20,6 +20,7 @@ public class PacmanObjectGroup extends PacmanActor {
 	
 	@Override
 	public void init() {
+		super.init();
 		if(wallArray != null) {
 			try {
 				initWallGroup();
@@ -27,7 +28,6 @@ public class PacmanObjectGroup extends PacmanActor {
 				throw new RuntimeException("Illegal object handling in ObjectGroup!");
 			}
 		}
-		super.init();
 	}
 	
 	public void setWallArray(int[][] walls) {
@@ -61,13 +61,13 @@ public class PacmanObjectGroup extends PacmanActor {
 		if(wallArray == null) {
 			throw new IllegalComponentStateException("Wall array not initilized!");
 		}
-		if(getStage() == null) {
+		if(getParentStage() == null) {
 			throw new IllegalStateException("Group not part of a stage yet!");
 		}
 		int xTiles = wallArray.length;
 		int yTiles = wallArray[0].length;
 		
-		GameStage stage = ((GameStage)getStage());
+		GameStage stage = getParentStage();
 		gameWallArray = new GameWall[xTiles][yTiles];
 		gameFoodArray = new GameFood[xTiles][yTiles];
 		for(int a = 0; a < xTiles; a++) {
@@ -75,17 +75,12 @@ public class PacmanObjectGroup extends PacmanActor {
 				switch(wallArray[a][b]) {
 					case 0:
 						gameFoodArray[a][b] = new GameFood();
-						stage.setFoodCount(stage.getFoodCount());
+						stage.setFoodCount(stage.getFoodCount()+1);
 						break;
 					case 1:
 					case 2:
 						gameWallArray[a][b] = new GameWall();
 						break;
-				}
-				if(wallArray[a][b] == 0) {
-					
-				} else if(wallArray[a][b] == 1) {
-					
 				}
 			}
 		}

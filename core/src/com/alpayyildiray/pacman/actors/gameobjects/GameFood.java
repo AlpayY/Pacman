@@ -2,7 +2,6 @@ package com.alpayyildiray.pacman.actors.gameobjects;
 
 import com.alpayyildiray.pacman.actors.PacmanActor;
 import com.alpayyildiray.pacman.actors.PacmanActor.Type;
-import com.alpayyildiray.pacman.stages.GameStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -30,9 +29,14 @@ public class GameFood extends PacmanActor {
 	}
 
 	public void init() {
-		GameStage stage = (GameStage)getStage();
+//		PacmanActor parent = this;
+//		while(hasParent()) {
+//			parent = (PacmanActor)parent.getParent();
+//		}
+//		GamegetParentStage() getParentStage() = (GamegetParentStage())parent.getgetParentStage()();
+		super.init();
 		
-		tileSize = stage.getTileSize();
+		tileSize = getParentStage().getTileSize();
 		
 		setSize(tileSize - offset*2, tileSize - offset*2);
 		setBounds(getX(), getY(), tileSize - offset*2, tileSize - offset*2);

@@ -8,9 +8,9 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		System.setProperty("sun.java2d.opengl","True");
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.useGL30 = true;
-		config.width = 1280;
-		config.height = 720;
+//		config.useGL30 = true;
+//		config.width = 1280;
+//		config.height = 720;
 		config.forceExit = true;
 		new LwjglApplication(new Pacman(), config);
 	}

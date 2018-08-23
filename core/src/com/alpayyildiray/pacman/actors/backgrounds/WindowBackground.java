@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.Group;
 
 public class WindowBackground extends PacmanActor{
 	
@@ -20,10 +21,10 @@ public class WindowBackground extends PacmanActor{
 	}
 	
 	public void init() {
-		Pacman pacman = ((GameStage)getStage()).getPacman();
+		super.init();
 		
-		worldWidth = pacman.getWorldWidth();
-		worldHeight = pacman.getWorldHeight();
+		worldWidth = getPacman().getWorldWidth();
+		worldHeight = getPacman().getWorldHeight();
 		
 		setSize(worldWidth, worldHeight);
 		setBounds(0, 0, getWidth(), getHeight());
