@@ -3,7 +3,6 @@ package com.alpayyildiray.pacman.actors.entities;
 import java.util.Random;
 
 import com.alpayyildiray.pacman.actors.PacmanActor;
-import com.alpayyildiray.pacman.actors.PacmanActor.Type;
 import com.alpayyildiray.pacman.actors.entities.Player.Direction;
 import com.alpayyildiray.pacman.animations.EnemyAnimation;
 import com.badlogic.gdx.graphics.Color;
@@ -11,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 public class Enemy extends PacmanActor {
@@ -21,8 +19,6 @@ public class Enemy extends PacmanActor {
 	
 	private static float movingSpeed = 0.35f;
 	private Direction facing = Direction.RIGHT;
-	private float initialPosX = 400f;
-	private float initialPosY = 400f;
 	private float tileSize;
 	private float tickDelay = 0.05f;
 	private Color color;
