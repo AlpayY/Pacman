@@ -11,7 +11,7 @@ public class GameWall extends PacmanActor {
 	private Texture texture;
 	private Sprite sprite;
 	
-	private float offset = 5f;
+//	private float offset = 5f;
 	private float tileSize = 0f;
 	
 	public GameWall() {
@@ -37,15 +37,19 @@ public class GameWall extends PacmanActor {
 		tileSize = getParentStage().getTileSize();
 		
 //		setSize(tileSize - offset*2, tileSize - offset*2);
-		setBounds(getX()+offset, getY()+offset, tileSize - offset, tileSize - offset);
-		sprite.setSize(tileSize+2f, tileSize+2f);
+//		setBounds(getX()+offset, getY()+offset, tileSize - offset, tileSize - offset);
+		setBounds(getX(), getY(), tileSize, tileSize);
+//		sprite.setSize(tileSize+2f, tileSize+2f);
+		sprite.setSize(tileSize, tileSize);
 	}
 	
 	public void setPosition(int x, int y) {
 		float posX = x * tileSize;
 		float posY = y * tileSize;
-		setPosition(posX+offset, posY+offset);
-		sprite.setPosition(posX-1, posY-1);
+//		setPosition(posX+offset, posY+offset);
+		setPosition(posX, posY);
+//		sprite.setPosition(posX-1, posY-1);
+		sprite.setPosition(posX, posY);
 	}
 	
 	@Override

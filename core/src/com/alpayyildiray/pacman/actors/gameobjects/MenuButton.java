@@ -31,7 +31,7 @@ public class MenuButton extends PacmanActor {
 	private float sizeY = 0f;
 	private float margin = 30f;
 	
-	public MenuButton(float posX, float posY, String text, Runnable action) {
+	public MenuButton(float posX, float posY, String text, final Runnable action) {
 		this.positionX = posX;
 		this.positionY = posY;
 		this.text = text;
@@ -74,12 +74,6 @@ public class MenuButton extends PacmanActor {
 	}
 	
 	public void init() {
-//		getPacman()Actor parent = this;
-//		while(hasParent()) {
-//			parent = (getPacman()Actor)parent.getParent();
-//		}
-//		GamegetParentStage() getParentStage() = (GamegetParentStage())parent.getgetParentStage()();
-//		getPacman() getPacman() = getParentStage().getgetPacman()();
 		super.init();
 		
 		this.sizeX = getPacman().getWorldWidth() / 3;

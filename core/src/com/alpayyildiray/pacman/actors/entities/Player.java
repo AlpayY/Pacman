@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 public class Player extends PacmanActor {
 	
-	private enum Direction {
+	public enum Direction {
 		UP(180.0f),
 		RIGHT(90.0f),
 		DOWN(0.0f),
@@ -33,7 +33,7 @@ public class Player extends PacmanActor {
 		public float asFloat() {
 			return dir;
 		}
-	}	
+	}
 
 	private PacmanAnimation animation;
 	private Sprite sprite;
@@ -49,7 +49,7 @@ public class Player extends PacmanActor {
 		
 		private static final int inputHoldTime = 250;
 		
-		KeyEvent(int keycode) {
+		KeyEvent(final int keycode) {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -83,12 +83,6 @@ public class Player extends PacmanActor {
 	}
 	
 	public void init() {
-//		PacmanActor parent = this;
-//		while(hasParent()) {
-//			parent = (PacmanActor)parent.getParent();
-//		}
-//		this.getParentStage() = (GamegetParentStage())parent.getgetParentStage()();
-//		this.pacman = getParentStage().getPacman();
 		super.init();
 		
 		tileSize = getParentStage().getTileSize();
@@ -97,9 +91,11 @@ public class Player extends PacmanActor {
 //		setBounds(0, 0, getWidth(), getHeight());
 		setPosition(0.0f, 0.0f);
 		
-//		sprite.setSize(tileSize-2, tileSize-2);
+//		sprite.setBounds(2, 2, tileSize-2, tileSize-2);
+//		sprite.setOrigin(tileSize/2-1, tileSize/2-1);
+//		sprite.setColor(1.0f, 1.0f, 0.0f, 1.0f);
 		sprite.setBounds(2, 2, tileSize-2, tileSize-2);
-		sprite.setOrigin(tileSize/2-1, tileSize/2-1);
+		sprite.setOriginCenter();
 		sprite.setColor(1.0f, 1.0f, 0.0f, 1.0f);
 	}
 	
@@ -296,10 +292,6 @@ public class Player extends PacmanActor {
 		} catch(NullPointerException e) {
 			return false;
 		}
-	}
-	
-	public void setMovingSpeed(float speed) {
-		movingSpeed = speed;
 	}
 
 	public boolean eatsFood() {
