@@ -109,6 +109,10 @@ public class Player extends PacmanActor {
 	public void act(float deltaT) {
 		handleKeyInput();
 		
+		if(touchesEnemy()) {
+			getPacman().setLevel(0);
+		}
+		
 		if(!hasActions()) {
 			if(tickDelay > 0.0f) {
 				tickDelay = 0.0f;
@@ -289,6 +293,14 @@ public class Player extends PacmanActor {
 		try {
 			PacmanActor actor = getObjectAt(vector);
 			return actor.getType() == Type.WALL;
+		} catch(NullPointerException e) {
+			return false;
+		}
+	}
+	
+	public boolean touchesEnemy() {
+		try {
+			return getLocal().getType() == Type.ENEMY;
 		} catch(NullPointerException e) {
 			return false;
 		}

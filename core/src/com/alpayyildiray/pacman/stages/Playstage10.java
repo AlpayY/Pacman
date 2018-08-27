@@ -20,12 +20,12 @@ public class PlayStage10 extends GameStage {
 		setTilesX(xTiles);
 		setTilesY(yTiles);
 		
+		WindowBackground bg = new WindowBackground("20-to-20-background.png");
+		addActor(bg);
+		
 		Group objectGroup = new ObjectGroup10();
 //		setRoot(objectGroup);
 		addActor(objectGroup);
-		
-		WindowBackground bg = new WindowBackground("20-to-20-background.png");
-		addActor(bg);
 		
 		Player player = new Player();
 		addActor(player);
@@ -33,19 +33,15 @@ public class PlayStage10 extends GameStage {
 		
 		Enemy enemy01 = new Enemy();
 		addActor(enemy01);
-		enemy01.generateInitialPosition(xTiles, yTiles, getTileSize());
 		Enemy enemy02 = new Enemy();
 		addActor(enemy02);
-		enemy02.generateInitialPosition(xTiles, yTiles, getTileSize());
 		Enemy enemy03 = new Enemy();
 		addActor(enemy03);
-		enemy03.generateInitialPosition(xTiles, yTiles, getTileSize());
 		Enemy enemy04 = new Enemy();
 		addActor(enemy04);
-		enemy04.generateInitialPosition(xTiles, yTiles, getTileSize());
 		
-		bg.setZIndex(0);
-		objectGroup.setZIndex(1);
-		player.setZIndex(2);
+//		bg.setZIndex(0);
+//		objectGroup.setZIndex(1);
+//		player.setZIndex(2);
 	}
 }

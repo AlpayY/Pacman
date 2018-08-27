@@ -57,6 +57,7 @@ public class Enemy extends PacmanActor {
 		sprite.setBounds(2, 2, tileSize-2, tileSize-2);
 		sprite.setOrigin(tileSize/2-1, tileSize/2-1);
 		sprite.setColor(color);
+		generateInitialPosition(getParentStage().getTilesX(), getParentStage().getTilesY(), getParentStage().getTileSize());
 	}
 	
 	public void generateInitialPosition(int xTiles, int yTiles, float tileSize) {
@@ -90,6 +91,7 @@ public class Enemy extends PacmanActor {
 			if(deltaT > movingSpeed) {
 				adjustedSpeed = 0.0f;
 			}
+			
 			if(atJunction()) {
 				if(new Random().nextInt(3) == 0 || !canMove(facing)) {
 					do {
@@ -97,9 +99,11 @@ public class Enemy extends PacmanActor {
 					} while(!canMove(facing));
 				}
 			}
-			if(!canMove(facing)) {
-				System.out.println("ALARMUM BELLS");
-			}
+			
+			try {
+				facing = playerInSight();
+			} catch(RuntimeException e) {}
+			
 			switch(facing) {
 				case UP: {
 					addAction(Actions.moveBy(0.0f, tileSize, adjustedSpeed));
@@ -130,13 +134,13 @@ public class Enemy extends PacmanActor {
 	}
 	
 	private boolean atJunction() {
-//		if(!canMove(facing)) {
-//			return true;
-//		}
 		for(int i = 0; i < 2; ++i) {
 			int mod = 1 - 2*i;
 			float interval = 90f * mod;
-			int turned = (int)(facing.asFloat() + interval);
+			int turned = (int)(facing.asFloat() + interval) % 360;
+			if(turned < 0) {
+				turned = 360 + turned;
+			}
 			Direction dir = facing;
 			if(Direction.UP.asFloat() == turned) {
 				dir = Direction.UP;
@@ -155,6 +159,38 @@ public class Enemy extends PacmanActor {
 			}
 		}
 		return false;
+	}
+	
+	private Direction playerInSight() {
+		for(Direction dir : Direction.values()) {
+			float tX = tileSize/2 + getX();
+			float tY = tileSize/2 + getY();
+			while(tX < getPacman().getWorldWidth() && tX >= 0 && tY < getPacman().getTotalHeight() && tY >= 0) {
+				Vector2 vector = new Vector2(tX, tY);
+				Type objectType = getObjectAt(vector).getType(); 
+				if(objectType == Type.PLAYER) {
+					return dir;
+				}
+				if(objectType == Type.WALL) {
+					break;
+				}
+				switch(dir) {
+					case UP:
+						tY += getParentStage().getTileSize();
+						break;
+					case DOWN:
+						tY += getParentStage().getTileSize();
+						break;
+					case LEFT:
+						tX -= getParentStage().getTileSize();
+						break;
+					case RIGHT:
+						tX += getParentStage().getTileSize();
+						break;
+				}
+			}
+		}
+		throw new RuntimeException();
 	}
 	
 	private boolean canMove(Direction d) {
